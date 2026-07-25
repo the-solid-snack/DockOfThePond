@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import Sidebar from '../components/Sidebar.astro';
+---
+<Base title="Not found">
+  <Sidebar slot="sidebar" />
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Nothing here<span style="color:var(--terra)">.</span></h1>
+      <p>That page doesn't exist, or it did once and I moved it. <a href="/" style="border-bottom:1px solid var(--terra)">Back to the writing</a>.</p>
+    </header>
+  </div>
+</Base>

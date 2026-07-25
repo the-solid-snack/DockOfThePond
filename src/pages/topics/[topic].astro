@@ -1,0 +1,52 @@
+---
+import Base from '../../layouts/Base.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { allPosts, longDate, readingTime, topicSlug, TOPIC_ORDER } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await allPosts();
+  const used = new Set<string>(TOPIC_ORDER);
+  posts.forEach((p) => p.data.topics.forEach((t) => used.add(t)));
+
+  return [...used].map((topic) => ({
+    params: { topic: topicSlug(topic) },
+    props: {
+      topic,
+      posts: posts.filter((p) => p.data.topics.includes(topic)),
+    },
+  }));
+}
+
+const { topic, posts } = Astro.props;
+---
+<Base title={topic} description={`Posts about ${topic}.`}>
+  <Sidebar slot="sidebar" activeTopic={topic} />
+
+  <div class="wrap">
+    <header class="page-head">
+      <h1>{topic}</h1>
+      <p>{posts.length} {posts.length === 1 ? 'post' : 'posts'} filed under this.</p>
+    </header>
+
+    <section class="feed">
+      <div class="section-head"><h2>{topic}</h2><span>Newest first</span></div>
+      {posts.map((post) => (
+        <a class="entry rise" href={`/posts/${post.id}`}>
+          <div class="entry-meta">
+            <time datetime={post.data.date.toISOString()}>{longDate(post.data.date)}</time>
+            <span class="sep"></span><span>{readingTime(post.body)} min</span>
+          </div>
+          <h3>{post.data.title}</h3>
+          <p>{post.data.summary}</p>
+          <span class="more">Read the post <span class="arrow">→</span></span>
+        </a>
+      ))}
+      {posts.length === 0 && (
+        <p style="padding:3rem 0;color:var(--ink-3)">Nothing filed under this yet.</p>
+      )}
+    </section>
+
+    <SiteFooter />
+  </div>
+</Base>

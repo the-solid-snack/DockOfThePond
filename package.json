@@ -1,0 +1,16 @@
+{
+  "name": "sel-and-soda",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.1.3"
+  }
+}

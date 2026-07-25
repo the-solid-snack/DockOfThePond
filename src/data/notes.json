@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-07-22",
+    "html": "Spent an hour convinced my oscilloscope was broken. It was the probe. It's always <a href=\"#\">the probe</a>."
+  },
+  {
+    "date": "2026-07-15",
+    "html": "TIL that <code>git bisect run</code> takes any script that exits non-zero. I have been doing this by hand for nine years."
+  },
+  {
+    "date": "2026-07-11",
+    "html": "Bought a label maker. Genuinely one of the top three purchases of the decade. The drawer of unmarked USB-C cables has been defeated."
+  }
+]
