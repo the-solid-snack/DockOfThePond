@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 // CHANGE `site` TO YOUR OWN DOMAIN BEFORE DEPLOYING.
 // Everything else can stay as it is.
 export default defineConfig({
-  site: 'https://andolfatto.co.uk',
+  site: 'https://dockofthepond.co.uk',
 
   markdown: {
     shikiConfig: {
