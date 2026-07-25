@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import Sidebar from '../components/Sidebar.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { SITE } from '../lib/site';
+import { allPosts, longDate, readingTime, shortDate } from '../lib/posts';
+import notes from '../data/notes.json';
+
+const posts = await allPosts();
+---
+<Base>
+  <Sidebar slot="sidebar" />
+
+  <div class="wrap">
+
+    <!-- ============ TITLE SCREEN ============
+         The name and the catch phrase live here. -->
+    <section class="hero">
+      <div class="eyebrow">
+        <span class="line"></span>
+        <span class="label">{SITE.location} · Since {SITE.startYear}</span>
+      </div>
+      <h1>Dock <em>of the</em><br />Pond<span class="dot">.</span></h1>
+      <p class="tagline">
+        Tribulations on an international scale, good food, and the occasional
+        swearing to God in French.
+      </p>
+      <div class="scroll-cue">
+        <span class="stem"></span><span class="label">Scroll to read</span>
+      </div>
+    </section>
+
+    <!-- ============ THE FEED ============
+         Built from src/content/posts — nothing to edit here. -->
+    <section class="feed" id="latest">
+      <div class="section-head">
+        <h2>Latest writing</h2>
+        <span>{posts.length} {posts.length === 1 ? 'post' : 'posts'}</span>
+      </div>
+
+      {posts.map((post, i) => (
+        <a class:list={['entry', 'rise', { featured: i === 0 }]} href={`/posts/${post.id}`}>
+          <div class="entry-meta">
+            <time datetime={post.data.date.toISOString()}>{longDate(post.data.date)}</time>
+            <span class="sep"></span><span>{readingTime(post.body)} min</span>
+            {post.data.topics.map((t) => (
+              <>
+                <span class="sep"></span><span class="tag">{t}</span>
+              </>
+            ))}
+          </div>
+          <h3>{post.data.title}</h3>
+          <p>{post.data.summary}</p>
+          <span class="more">Read the post <span class="arrow">→</span></span>
+        </a>
+      ))}
+
+      {posts.length === 0 && (
+        <p style="padding:3rem 0;color:var(--ink-3)">
+          Nothing here yet. Add a .md file to <code>src/content/posts</code>.
+        </p>
+      )}
+    </section>
+
+    <!-- ============ SHORT NOTES ============
+         Edit src/data/notes.json to change these. -->
+    {notes.length > 0 && (
+      <section class="notes rise" id="notes">
+        <div class="section-head">
+          <h2>Short notes</h2>
+          <span>Unedited, unfiltered</span>
+        </div>
+        {notes.map((n) => (
+          <div class="note">
+            <time datetime={n.date}>{shortDate(new Date(n.date))}</time>
+            <p set:html={n.html}></p>
+          </div>
+        ))}
+      </section>
+    )}
+
+    <SiteFooter />
+  </div>
+</Base>

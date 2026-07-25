@@ -1,0 +1,138 @@
+---
+import '../styles/global.css';
+import { SITE } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Show the thin terracotta reading-progress bar (articles only). */
+  progress?: boolean;
+}
+
+const { title, description = SITE.description, progress = false } = Astro.props;
+const fullTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — a mental dump space`;
+---
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Set the theme before first paint so there's no flash of the wrong one. -->
+  <script is:inline>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  {progress && <div class="progress" id="progress"></div>}
+
+  <slot name="sidebar" />
+
+  <main id="content">
+    <slot />
+  </main>
+
+  <script>
+    /* ---------- theme ---------- */
+    const root = document.documentElement;
+    const btn = document.getElementById('theme');
+    const lbl = document.getElementById('theme-label');
+    const syncLabel = () => {
+      if (lbl) lbl.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light' : 'Dark';
+    };
+    syncLabel();
+    btn?.addEventListener('click', () => {
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      syncLabel();
+    });
+
+    /* ---------- mobile menu ---------- */
+    const burger = document.getElementById('burger');
+    const sidebar = document.getElementById('sidebar');
+    const closedLabel = burger?.textContent?.trim() ?? 'Menu';
+    burger?.addEventListener('click', () => {
+      const open = sidebar?.classList.toggle('open') ?? false;
+      burger.setAttribute('aria-expanded', String(open));
+      burger.textContent = open ? 'Close' : closedLabel;
+    });
+
+    /* ---------- scroll reveal ---------- */
+    const rising = document.querySelectorAll('.rise');
+    if (!('IntersectionObserver' in window)) {
+      rising.forEach((el) => el.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              en.target.classList.add('in');
+              io.unobserve(en.target);
+            }
+          });
+        },
+        { rootMargin: '0px 0px -12% 0px', threshold: 0.05 }
+      );
+      rising.forEach((el, i) => {
+        (el as HTMLElement).style.transitionDelay = Math.min(i, 4) * 60 + 'ms';
+        io.observe(el);
+      });
+    }
+
+    /* ---------- reading progress (articles) ---------- */
+    const bar = document.getElementById('progress');
+    const art = document.querySelector('article');
+    if (bar && art) {
+      const tick = () => {
+        const pct =
+          (window.scrollY - (art as HTMLElement).offsetTop + window.innerHeight * 0.5) /
+          (art as HTMLElement).offsetHeight;
+        bar.style.width = Math.max(0, Math.min(1, pct)) * 100 + '%';
+      };
+      tick();
+      addEventListener('scroll', tick, { passive: true });
+      addEventListener('resize', tick);
+    }
+
+    /* ---------- active contents entry ---------- */
+    const heads = document.querySelectorAll('.prose h2[id]');
+    const tocLinks = new Map<string, Element>();
+    document.querySelectorAll('.toc a').forEach((a) => {
+      const href = a.getAttribute('href');
+      if (href) tocLinks.set(href.slice(1), a);
+    });
+    if (heads.length && tocLinks.size && 'IntersectionObserver' in window) {
+      const io2 = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              tocLinks.forEach((a) => a.classList.remove('active'));
+              tocLinks.get(en.target.id)?.classList.add('active');
+            }
+          });
+        },
+        { rootMargin: '-15% 0px -70% 0px' }
+      );
+      heads.forEach((h) => io2.observe(h));
+    }
+  </script>
+</body>
+</html>

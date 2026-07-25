@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Sidebar from '../components/Sidebar.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+<Base title="About" description="Who is writing this and why.">
+  <Sidebar slot="sidebar" />
+
+  <article>
+    <header class="art-head">
+      <div class="kicker"><span class="line"></span><span class="label">About</span></div>
+      <h1>Who's writing this</h1>
+      <p class="dek">Replace this page with your own words. It's ordinary markup, same styles as a post.</p>
+    </header>
+
+    <div class="prose">
+      <p>
+        French by birth, resident of Northern Ireland by choice, permanently thinking
+        about the next meal. This site exists because ideas kept escaping and I wanted
+        somewhere to put them down.
+      </p>
+      <p>
+        There is no schedule, no newsletter, and no comment section. If something here
+        is wrong or useful, you know where to find me.
+      </p>
+    </div>
+  </article>
+
+  <div class="art-foot"><SiteFooter narrow /></div>
+</Base>

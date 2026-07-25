@@ -1,0 +1,13 @@
+---
+import { SITE } from '../lib/site';
+interface Props { narrow?: boolean }
+const { narrow = false } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class:list={['site', { narrow }]}>
+  <div>
+    <div class="sig">Dock <em>of the</em> Pond</div>
+    <p style="margin-top:.6rem">A personal site, written for an audience of one. Opinions subject to revision after lunch.</p>
+  </div>
+  <p set:html={`${SITE.colophon}<br>© ${year} — take what's useful`}></p>
+</footer>

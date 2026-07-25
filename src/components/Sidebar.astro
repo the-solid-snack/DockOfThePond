@@ -1,0 +1,89 @@
+---
+import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import { SITE } from '../lib/site';
+import { allPosts, topicCounts, topicSlug } from '../lib/posts';
+
+interface Props {
+  /** 'nav' on the home and topic pages, 'post' on an article. */
+  mode?: 'nav' | 'post';
+  /** Headings from render(post), used to build the article contents list. */
+  headings?: { depth: number; slug: string; text: string }[];
+  /** Highlight the current topic in the nav. */
+  activeTopic?: string;
+  /** Small line at the bottom of an article's sidebar. */
+  meta?: string;
+}
+
+const { mode = 'nav', headings = [], activeTopic, meta } = Astro.props;
+
+const posts = await allPosts();
+const topics = await topicCounts();
+const toc = headings.filter((h) => h.depth === 2);
+---
+
+<aside class="sidebar" id="sidebar">
+  <div class="top-row">
+    <Logo />
+    <div class="mobile-bar">
+      <button class="burger" id="burger" aria-expanded="false" aria-controls="sidebar">
+        {mode === 'post' ? 'Contents' : 'Menu'}
+      </button>
+    </div>
+  </div>
+
+  {mode === 'post' && (
+    <a class="back" href="/"><span class="arrow">←</span> All writing</a>
+  )}
+
+  {mode === 'post' && toc.length > 0 && (
+    <div class="toc" id="toc">
+      <span class="label">In this post</span>
+      {toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}
+    </div>
+  )}
+
+  {mode === 'nav' && (
+    <nav class="side-nav">
+      <div class="nav-group">
+        <span class="label">Reading</span>
+        <a class="nav-link" href="/">Latest</a>
+        <a class="nav-link" href="/#notes">Notes</a>
+        <a class="nav-link" href="/archive">Archive <span class="n">{posts.length}</span></a>
+      </div>
+
+      <div class="nav-group">
+        <span class="label">Topics</span>
+        {topics.map((t) => (
+          <a
+            class="nav-link"
+            href={`/topics/${topicSlug(t.name)}`}
+            aria-current={activeTopic === t.name ? 'page' : undefined}
+          >
+            {t.name} <span class="n">{t.count}</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="nav-group">
+        <span class="label">Elsewhere</span>
+        <a class="nav-link" href="/about">About</a>
+        <a class="nav-link" href="/rss.xml">RSS</a>
+      </div>
+    </nav>
+  )}
+
+  <div class="side-foot">
+    <ThemeToggle />
+    {mode === 'post' && meta ? (
+      <p>{meta}</p>
+    ) : (
+      <>
+        <div class="side-links">
+          {SITE.links.map((l) => <a href={l.href}>{l.label}</a>)}
+        </div>
+        <p>{SITE.footnote}</p>
+      </>
+    )}
+  </div>
+</aside>

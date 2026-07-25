@@ -1,0 +1,88 @@
+---
+import Base from './Base.astro';
+import Sidebar from '../components/Sidebar.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { SITE } from '../lib/site';
+import { longDate, readingTime, topicSlug, type Post } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  headings: { depth: number; slug: string; text: string }[];
+  /** The post published just before this one. */
+  older?: Post;
+  /** The post published just after this one. */
+  newer?: Post;
+}
+
+const { post, headings, older, newer } = Astro.props;
+const { title, date, summary, topics, kicker } = post.data;
+const minutes = readingTime(post.body);
+---
+<Base title={title} description={summary} progress>
+  <Sidebar
+    slot="sidebar"
+    mode="post"
+    headings={headings}
+    meta={`${minutes} min read · ${longDate(date)}`}
+  />
+
+  <article>
+    <header class="art-head">
+      <div class="kicker">
+        <span class="line"></span>
+        <span class="label">{kicker ?? topics.join(' · ')}</span>
+      </div>
+      <h1>{title}</h1>
+      <p class="dek">{summary}</p>
+      <div class="byline">
+        <span class="who">{SITE.author}</span>
+        <span class="sep"></span><time datetime={date.toISOString()}>{longDate(date)}</time>
+        <span class="sep"></span><span>{minutes} min read</span>
+        <span class="sep"></span><span>{SITE.location}</span>
+      </div>
+    </header>
+
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+
+  <div class="art-foot">
+    <div class="tags">
+      {topics.map((t) => <a class="tag" href={`/topics/${topicSlug(t)}`}>{t}</a>)}
+    </div>
+
+    <div class="author-card">
+      <div class="avatar" aria-hidden="true"></div>
+      <div>
+        <div class="name">{SITE.author}</div>
+        <p>
+          French, lives in Northern Ireland, thinks about dinner during meetings.
+          Writes here about whatever happened. <a href="/about">More about me</a>,
+          or <a href="/rss.xml">new posts by RSS</a>.
+        </p>
+      </div>
+    </div>
+
+    <nav class="pager">
+      {older ? (
+        <a class="prev" href={`/posts/${older.id}`}>
+          <span class="label">← Older</span>
+          <span class="t">{older.data.title}</span>
+        </a>
+      ) : (
+        <div class="empty"></div>
+      )}
+      {newer ? (
+        <a class="next" href={`/posts/${newer.id}`}>
+          <span class="label">Newer →</span>
+          <span class="t">{newer.data.title}</span>
+        </a>
+      ) : (
+        <div class="empty"></div>
+      )}
+    </nav>
+  </div>
+
+  <SiteFooter narrow />
+</Base>

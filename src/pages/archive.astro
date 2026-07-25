@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Sidebar from '../components/Sidebar.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { allPosts, longDate } from '../lib/posts';
+
+const posts = await allPosts();
+const years = [...new Set(posts.map((p) => p.data.date.getFullYear()))].sort((a, b) => b - a);
+---
+<Base title="Archive" description="Everything, oldest to newest.">
+  <Sidebar slot="sidebar" />
+
+  <div class="wrap">
+    <header class="page-head">
+      <h1>Archive</h1>
+      <p>Everything, newest first. {posts.length} in total.</p>
+    </header>
+
+    {years.map((year) => (
+      <section class="notes" style="margin-top:2rem">
+        <div class="section-head"><h2>{year}</h2><span></span></div>
+        {posts
+          .filter((p) => p.data.date.getFullYear() === year)
+          .map((p) => (
+            <div class="note">
+              <time datetime={p.data.date.toISOString()}>{longDate(p.data.date)}</time>
+              <p><a href={`/posts/${p.id}`}>{p.data.title}</a></p>
+            </div>
+          ))}
+      </section>
+    ))}
+
+    <SiteFooter />
+  </div>
+</Base>
