@@ -97,8 +97,9 @@ img{max-width:100%;display:block}
   padding:2.25rem 1.75rem;display:flex;flex-direction:column;gap:2.25rem;
   border-right:1px solid var(--rule);background:var(--paper);z-index:50;
   transition:background .5s var(--ease),border-color .5s var(--ease);
-  overflow-y:auto;
-}
+  overflow-y:auto;scrollbar-width:none;
+} 
+.sidebar::-webkit-scrollbar{display:none}
 .logo{display:flex;align-items:center;gap:.65rem}
 .logo svg{width:26px;height:26px;flex:none;overflow:visible}
 .logo .mark-ring{fill:none;stroke:var(--green);stroke-width:1.4}
@@ -187,7 +188,8 @@ main{margin-left:var(--bar);padding:0 var(--pad)}
   font-family:var(--display);font-size:clamp(3.4rem,10.5vw,9.5rem);
   line-height:.94;letter-spacing:-.03em;margin-bottom:2rem;
 }
-.hero h1 em{font-style:italic;color:var(--green)}
+.hero h1 em{font-style:italic;color:var(--ink)}
+.hero h1 .pond{color:var(--green)}
 .hero h1 .dot{color:var(--terra)}
 .hero .tagline{max-width:30rem;font-size:1.24rem;line-height:1.6;color:var(--ink-2);font-weight:300}
 .hero .tagline b{font-weight:500;color:var(--ink)}
