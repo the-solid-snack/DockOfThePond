@@ -2,7 +2,7 @@
 title: "In defence of the crisp sandwich"
 date: 2026-07-22
 summary: "My grandmother would disown me. She would also be wrong, and I can prove it with texture."
-topics: [Food, Half-baked]
+topics: [Food, Half-baked, English]
 kicker: "Food · A hill I will die on"
 ---
 

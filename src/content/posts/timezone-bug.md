@@ -2,7 +2,7 @@
 title: "The bug was the timezone. The bug is always the timezone."
 date: 2026-07-04
 summary: "A short field guide to the six ways a date can betray you, collected over one very long Tuesday and one increasingly confused customer."
-topics: [Tech]
+topics: [Tech, English]
 kicker: "Tech · Confessions"
 ---
 

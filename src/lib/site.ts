@@ -10,12 +10,6 @@ export const SITE = {
   location: 'Northern Ireland',
   startYear: 2026,
 
-  // Sidebar bottom-left links. Add or remove freely.
-  links: [
-    { label: 'GitHub', href: 'https://github.com/' },
-    { label: 'Email', href: 'mailto:hello@example.com' },
-  ],
-
   // Small print under the sidebar links.
   footnote: 'Written by a human, usually after dinner. No trackers, no newsletter, no plan.',
 
