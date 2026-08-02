@@ -13,31 +13,21 @@ const { title, description = SITE.description, progress = false } = Astro.props;
 const fullTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — a mental dump space`;
 ---
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet"
   />
 
-  <!-- Set the theme before first paint so there's no flash of the wrong one. -->
-  <script is:inline>
-    (function () {
-      var t = null;
-      try { t = localStorage.getItem('theme'); } catch (e) {}
-      if (!t && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) t = 'dark';
-      if (t) document.documentElement.setAttribute('data-theme', t);
-    })();
-  </script>
 </head>
 <body>
   <a class="skip" href="#content">Skip to content</a>
@@ -50,21 +40,6 @@ const fullTitle = title ? `${title} — ${SITE.title}` : `${SITE.title} — a me
   </main>
 
   <script>
-    /* ---------- theme ---------- */
-    const root = document.documentElement;
-    const btn = document.getElementById('theme');
-    const lbl = document.getElementById('theme-label');
-    const syncLabel = () => {
-      if (lbl) lbl.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light' : 'Dark';
-    };
-    syncLabel();
-    btn?.addEventListener('click', () => {
-      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('theme', next); } catch (e) {}
-      syncLabel();
-    });
-
     /* ---------- mobile menu ---------- */
     const burger = document.getElementById('burger');
     const sidebar = document.getElementById('sidebar');

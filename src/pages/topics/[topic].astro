@@ -2,11 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import { allPosts, longDate, readingTime, topicSlug, TOPIC_ORDER } from '../../lib/posts';
+import { allPosts, longDate, readingTime, topicSlug, TOPIC_ORDER, LANGUAGE_ORDER } from '../../lib/posts';
 
 export async function getStaticPaths() {
   const posts = await allPosts();
-  const used = new Set<string>(TOPIC_ORDER);
+  const used = new Set<string>([...TOPIC_ORDER, ...LANGUAGE_ORDER]);
   posts.forEach((p) => p.data.topics.forEach((t) => used.add(t)));
 
   return [...used].map((topic) => ({

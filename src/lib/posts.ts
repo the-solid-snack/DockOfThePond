@@ -30,21 +30,36 @@ export function readingTime(body: string | undefined): number {
   return Math.max(1, Math.round(words / 200));
 }
 
-/** Topic -> post count, in the order the nav should show them. */
+/** The tags shown under "Topics" in the sidebar, in order. */
 export const TOPIC_ORDER = ['Food', 'Culture', 'Tech', 'Half-baked'];
 
-export async function topicCounts(): Promise<{ name: string; count: number }[]> {
+/** The tags shown under "Language" in the sidebar, in order. */
+export const LANGUAGE_ORDER = ['English', 'French'];
+
+/** Every tag used across all posts, with how many posts use it. */
+async function tagCounts(): Promise<Map<string, number>> {
   const posts = await allPosts();
   const counts = new Map<string, number>();
   for (const p of posts) {
     for (const t of p.data.topics) counts.set(t, (counts.get(t) ?? 0) + 1);
   }
+  return counts;
+}
+
+export async function topicCounts(): Promise<{ name: string; count: number }[]> {
+  const counts = await tagCounts();
   const known = TOPIC_ORDER.map((name) => ({ name, count: counts.get(name) ?? 0 }));
+  // Anything you invent in a post's frontmatter shows up here automatically.
   const extra = [...counts.keys()]
-    .filter((n) => !TOPIC_ORDER.includes(n))
+    .filter((n) => !TOPIC_ORDER.includes(n) && !LANGUAGE_ORDER.includes(n))
     .sort()
     .map((name) => ({ name, count: counts.get(name) ?? 0 }));
   return [...known, ...extra];
+}
+
+export async function languageCounts(): Promise<{ name: string; count: number }[]> {
+  const counts = await tagCounts();
+  return LANGUAGE_ORDER.map((name) => ({ name, count: counts.get(name) ?? 0 }));
 }
 
 /** URL-safe topic slug, e.g. "Half-baked" -> "half-baked" */

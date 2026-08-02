@@ -2,7 +2,7 @@
 title: "My terminal setup is boring on purpose"
 date: 2026-06-09
 summary: "Every year I rebuild my dotfiles and every year I delete more than I add. The current config fits on one screen and I can rebuild it from memory."
-topics: [Tech]
+topics: [Tech, English]
 kicker: "Tech · Tools"
 ---
 

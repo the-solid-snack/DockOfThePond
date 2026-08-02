@@ -1,8 +1,7 @@
 ---
 import Logo from './Logo.astro';
-import ThemeToggle from './ThemeToggle.astro';
 import { SITE } from '../lib/site';
-import { allPosts, topicCounts, topicSlug } from '../lib/posts';
+import { allPosts, topicCounts, languageCounts, topicSlug } from '../lib/posts';
 
 interface Props {
   /** 'nav' on the home and topic pages, 'post' on an article. */
@@ -19,6 +18,7 @@ const { mode = 'nav', headings = [], activeTopic, meta } = Astro.props;
 
 const posts = await allPosts();
 const topics = await topicCounts();
+const languages = await languageCounts();
 const toc = headings.filter((h) => h.depth === 2);
 ---
 
@@ -66,24 +66,26 @@ const toc = headings.filter((h) => h.depth === 2);
       </div>
 
       <div class="nav-group">
+        <span class="label">Language</span>
+        {languages.map((l) => (
+          <a
+            class="nav-link"
+            href={`/topics/${topicSlug(l.name)}`}
+            aria-current={activeTopic === l.name ? 'page' : undefined}
+          >
+            {l.name} <span class="n">{l.count}</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="nav-group">
         <span class="label">Elsewhere</span>
         <a class="nav-link" href="/about">About</a>
-        <a class="nav-link" href="/rss.xml">RSS</a>
       </div>
     </nav>
   )}
 
   <div class="side-foot">
-    <ThemeToggle />
-    {mode === 'post' && meta ? (
-      <p>{meta}</p>
-    ) : (
-      <>
-        <div class="side-links">
-          {SITE.links.map((l) => <a href={l.href}>{l.label}</a>)}
-        </div>
-        <p>{SITE.footnote}</p>
-      </>
-    )}
+    {mode === 'post' && meta ? <p>{meta}</p> : <p>{SITE.footnote}</p>}
   </div>
 </aside>

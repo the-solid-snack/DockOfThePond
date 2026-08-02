@@ -2,7 +2,7 @@
 title: "I taught a €4 microcontroller to water my plants"
 date: 2026-07-18
 summary: "What started as a soil sensor and a pump turned into three weekends of arguing with myself about interrupts. The plants are alive. My assumptions about embedded Rust are not."
-topics: [Tech, Half-baked]
+topics: [Tech, Half-baked, English]
 kicker: "Hardware · Field notes"
 ---
 

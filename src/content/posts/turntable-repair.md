@@ -2,7 +2,7 @@
 title: "Repairing a 1978 turntable with parts from three continents"
 date: 2026-05-28
 summary: "The belt came from Poland, the stylus from Japan, and the patience from nowhere in particular. A slow story about tolerances."
-topics: [Culture]
+topics: [Culture, English]
 kicker: "Culture · Music"
 ---
 

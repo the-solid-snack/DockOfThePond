@@ -2,7 +2,7 @@
 title: "Reading Gödel, Escher, Bach for the third time, and finally getting the joke"
 date: 2026-06-21
 summary: "I've owned this book for eleven years. Two of those attempts ended at page ninety. Here's what changed, and why the dialogues are the actual argument."
-topics: [Culture, Half-baked]
+topics: [Culture, Half-baked, English]
 kicker: "Culture · Books"
 ---
 
