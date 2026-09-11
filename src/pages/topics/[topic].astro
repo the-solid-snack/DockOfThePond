@@ -2,14 +2,14 @@
 import Base from '../../layouts/Base.astro';
 import Sidebar from '../../components/Sidebar.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import { allPosts, longDate, readingTime, topicSlug, TOPIC_ORDER, LANGUAGE_ORDER } from '../../lib/posts';
+import { allPosts, longDate, readingTime, topicSlug, usedTags } from '../../lib/posts';
 
 export async function getStaticPaths() {
   const posts = await allPosts();
-  const used = new Set<string>([...TOPIC_ORDER, ...LANGUAGE_ORDER]);
-  posts.forEach((p) => p.data.topics.forEach((t) => used.add(t)));
+  // Only tags a post actually uses get a page — no empty "0 posts" pages.
+  const used = await usedTags();
 
-  return [...used].map((topic) => ({
+  return used.map((topic) => ({
     params: { topic: topicSlug(topic) },
     props: {
       topic,

@@ -30,10 +30,14 @@ export function readingTime(body: string | undefined): number {
   return Math.max(1, Math.round(words / 200));
 }
 
-/** The tags shown under "Topics" in the sidebar, in order. */
-export const TOPIC_ORDER = ['Food', 'Culture', 'Tech', 'Half-baked'];
+/**
+ * Preferred order for the "Topics" list in the sidebar. This is only an
+ * ordering hint: a tag in here that no post uses stays hidden, and a tag
+ * you invent in a post's frontmatter shows up even if it isn't listed.
+ */
+export const TOPIC_ORDER = ['Kitchen', 'Fiction', 'Food', 'Culture', 'Tech', 'Half-baked'];
 
-/** The tags shown under "Language" in the sidebar, in order. */
+/** Same idea for the "Language" list. */
 export const LANGUAGE_ORDER = ['English', 'French'];
 
 /** Every tag used across all posts, with how many posts use it. */
@@ -48,18 +52,25 @@ async function tagCounts(): Promise<Map<string, number>> {
 
 export async function topicCounts(): Promise<{ name: string; count: number }[]> {
   const counts = await tagCounts();
-  const known = TOPIC_ORDER.map((name) => ({ name, count: counts.get(name) ?? 0 }));
+  const known = TOPIC_ORDER.filter((n) => counts.has(n));
   // Anything you invent in a post's frontmatter shows up here automatically.
   const extra = [...counts.keys()]
     .filter((n) => !TOPIC_ORDER.includes(n) && !LANGUAGE_ORDER.includes(n))
-    .sort()
-    .map((name) => ({ name, count: counts.get(name) ?? 0 }));
-  return [...known, ...extra];
+    .sort();
+  return [...known, ...extra].map((name) => ({ name, count: counts.get(name) ?? 0 }));
 }
 
 export async function languageCounts(): Promise<{ name: string; count: number }[]> {
   const counts = await tagCounts();
-  return LANGUAGE_ORDER.map((name) => ({ name, count: counts.get(name) ?? 0 }));
+  return LANGUAGE_ORDER.filter((n) => counts.has(n)).map((name) => ({
+    name,
+    count: counts.get(name) ?? 0,
+  }));
+}
+
+/** Every tag actually in use, for building the /topics pages. */
+export async function usedTags(): Promise<string[]> {
+  return [...(await tagCounts()).keys()];
 }
 
 /** URL-safe topic slug, e.g. "Half-baked" -> "half-baked" */
