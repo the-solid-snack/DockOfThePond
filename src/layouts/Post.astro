@@ -15,7 +15,9 @@ interface Props {
 }
 
 const { post, headings, older, newer } = Astro.props;
-const { title, date, summary, topics, kicker } = post.data;
+const { title, date, summary, topics, kicker, author, authorBio } = post.data;
+const byline = author ?? SITE.author;
+const isGuest = Boolean(author);
 const minutes = readingTime(post.body);
 ---
 <Base title={title} description={summary} progress>
@@ -35,10 +37,10 @@ const minutes = readingTime(post.body);
       <h1>{title}</h1>
       <p class="dek">{summary}</p>
       <div class="byline">
-        <span class="who">{SITE.author}</span>
+        <span class="who">{byline}</span>
         <span class="sep"></span><time datetime={date.toISOString()}>{longDate(date)}</time>
         <span class="sep"></span><span>{minutes} min read</span>
-        <span class="sep"></span><span>{SITE.location}</span>
+        {!isGuest && <><span class="sep"></span><span>{SITE.location}</span></>}
       </div>
     </header>
 
@@ -55,11 +57,15 @@ const minutes = readingTime(post.body);
     <div class="author-card">
       <div class="avatar" aria-hidden="true"></div>
       <div>
-        <div class="name">{SITE.author}</div>
-        <p>
-          French, lives in Northern Ireland, thinks about dinner during meetings.
-          Writes here about whatever happened. <a href="/about">More about me</a>.
-        </p>
+        <div class="name">{byline}</div>
+        {isGuest ? (
+          <p>{authorBio}</p>
+        ) : (
+          <p>
+            French, lives in Northern Ireland, thinks about dinner during meetings.
+            Writes here about whatever happened. <a href="/about">More about me</a>.
+          </p>
+        )}
       </div>
     </div>
 
