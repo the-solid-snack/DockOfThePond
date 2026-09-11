@@ -35,7 +35,7 @@ export function readingTime(body: string | undefined): number {
  * ordering hint: a tag in here that no post uses stays hidden, and a tag
  * you invent in a post's frontmatter shows up even if it isn't listed.
  */
-export const TOPIC_ORDER = ['Kitchen', 'Fiction', 'Food', 'Culture', 'Tech', 'Half-baked'];
+export const TOPIC_ORDER = ['Kitchen', 'Fiction', 'AI', 'Food', 'Culture', 'Half-baked'];
 
 /** Same idea for the "Language" list. */
 export const LANGUAGE_ORDER = ['English', 'French'];
