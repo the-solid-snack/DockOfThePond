@@ -217,8 +217,6 @@ main{margin-left:var(--bar);padding:0 var(--pad)}
 .entry:hover .more .arrow{transform:translateX(6px)}
 
 .entry.featured{padding-top:3.4rem}
-.entry.featured h3{font-size:clamp(2.4rem,5.6vw,4.4rem);max-width:26ch}
-.entry.featured p{font-size:1.16rem;max-width:34rem}
 .entry.featured::before{
   content:"Latest";position:absolute;top:1.6rem;left:0;
   font-family:var(--sans);font-size:.66rem;letter-spacing:.16em;
