@@ -18,6 +18,10 @@ const posts = defineCollection({
     topics: z.array(z.string()).default([]),
     // Optional small line above the headline on the post page.
     kicker: z.string().optional(),
+    // Guest posts: override the byline name and the card at the foot.
+    // Leave both out and the post is credited to SITE.author as usual.
+    author: z.string().optional(),
+    authorBio: z.string().optional(),
     // draft: true hides it from the built site, but you still
     // see it when running locally.
     draft: z.boolean().default(false),
