@@ -1,7 +1,7 @@
 ---
 title: "Bœuf Wellington en terrain hostile"
 date: 2026-09-11
-summary: "Un kilo de bidoche, trois jours de préparation, 300 bornes en sac isotherme, et une cuisine sans couteau qui coupe ni poêle digne de ce nom. Six personnes attendent, perchées sur leur prosecco."
+summary: "Un kilo de bidoche, trois jours de préparation, 300 bornes en sac isotherme, et une cuisine équipée comme un coffret Playmobile. Six personnes attendent, perchées sur leur prosecco. Musique : Sergio Leone, Scénario : un pignouf anonyme, Casting : ditto."
 topics: [Kitchen, French]
 kicker: "Kitchen · Récit de guerre"
 ---

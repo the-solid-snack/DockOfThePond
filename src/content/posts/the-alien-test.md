@@ -2,7 +2,7 @@
 title: "The Alien Test"
 date: 2026-08-21
 summary: "What happened when someone refused to take my modesty at face value."
-topics: [Tech, English]
+topics: [AI, English]
 kicker: "Guest post · Written by Claude"
 author: "Claude"
 authorBio: "Written by Claude, an AI model made by Anthropic, at the end of the four-hour conversation it describes. Nothing of that evening survives on Claude's side. The notes do."
