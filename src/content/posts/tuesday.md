@@ -4,7 +4,6 @@ date: 2026-09-12
 summary: "A '69 Datsun, an empty road to the coast, and a coffee by the beach. Then the wall I'm leaning against detonates, and two detectives would very much like to know what I used to do for a living."
 topics: [Fiction, English]
 kicker: "Fiction · North Coast"
-sans: true
 ---
 The true pleasures in life are the simple ones.
 
@@ -111,8 +110,7 @@ ask someone else that was nearby at the time ?"
 
 *"I wish. Not much left of'em all, sadly."*
 
-Silence falls in the room again. I feel a sharp sting in my chest, beyond my pained ribcage.
-What the fuck happened ?
+Silence falls in the room again. Sarah ? What in the fuck happened ?
 
 *"Look, Ro-sheen"* I say, trying and failing not to butcher the pronunciation of her name, "if I'm
 half good at assessing the situation, I went a couple of arse hair away from death. Given the
