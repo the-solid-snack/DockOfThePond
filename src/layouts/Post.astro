@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { post, headings, older, newer } = Astro.props;
-const { title, date, summary, topics, kicker, author, authorBio } = post.data;
+const { title, date, summary, topics, kicker, author, authorBio, sans } = post.data;
 const byline = author ?? SITE.author;
 const isGuest = Boolean(author);
 const minutes = readingTime(post.body);
@@ -28,7 +28,7 @@ const minutes = readingTime(post.body);
     meta={`${minutes} min read · ${longDate(date)}`}
   />
 
-  <article>
+  <article class:list={{ 'set-sans': sans }}>
     <header class="art-head">
       <div class="kicker">
         <span class="line"></span>
