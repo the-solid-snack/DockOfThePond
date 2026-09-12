@@ -22,6 +22,8 @@ const posts = defineCollection({
     // Leave both out and the post is credited to SITE.author as usual.
     author: z.string().optional(),
     authorBio: z.string().optional(),
+    // sans: true sets this one post in the sans face instead of the serif.
+    sans: z.boolean().default(false),
     // draft: true hides it from the built site, but you still
     // see it when running locally.
     draft: z.boolean().default(false),
