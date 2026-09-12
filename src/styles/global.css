@@ -428,7 +428,8 @@ footer.site p{font-family:var(--sans);font-size:.76rem;color:var(--ink-3);line-h
   text-transform:uppercase;color:rgba(255,255,255,.55);
 }
 
-/* — set-sans: opt one post out of the serif, via `sans: true` in its frontmatter — */
+/* — set-sans: posts are set in the sans face. Only the post layout carries
+   this class, so the homepage, sidebar, About and topic pages stay serif. — */
 .set-sans h1,
 .set-sans .dek,
 .set-sans .prose{font-family:var(--sans)}
