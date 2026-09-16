@@ -192,23 +192,58 @@ Afterwards, tell them where to watch and what to expect:
 - Build progress: <https://github.com/the-solid-snack/DockOfThePond/actions>
 - Live in roughly a minute at `https://dockofthepond.co.uk/posts/<slug>`
 
-Don't claim it's live — say it's building, and that the Actions tab shows failures.
+Don't claim it's live on the strength of the push alone — say it's building.
+
+**Then check, rather than leaving them to.** The repo is public, so the Actions API
+answers without a token or any `gh` login:
+
+```bash
+curl -s "https://api.github.com/repos/the-solid-snack/DockOfThePond/actions/runs?per_page=1"
+```
+
+On Windows, where `curl` may not be on PATH, the same call from PowerShell:
+
+```powershell
+(Invoke-RestMethod -Uri "https://api.github.com/repos/the-solid-snack/DockOfThePond/actions/runs?per_page=1" -Headers @{ "User-Agent" = "claude-code" }).workflow_runs |
+  Select-Object status, conclusion, head_sha, created_at
+```
+
+Wait a moment after pushing — the run needs a few seconds to appear, and `status`
+goes `queued` → `in_progress` → `completed`. What you want is `conclusion: success`
+against the `head_sha` you just pushed. Match that sha; a green run for the *previous*
+commit tells you nothing about this one. Only then say it's live.
+
+If `conclusion` is `failure`, say so and don't guess at the cause — the anonymous API
+gives status, not log detail. `gh run view --log-failed` reads the log properly, but
+needs `gh auth login`, which the author has to run themselves.
 
 ---
 
 ## Things that will bite you on this machine
 
-**Node isn't installed.** `node` and `npm` are not on PATH, so phase 2 cannot run
-until that's fixed. `winget` is available, so the fix is one command in a terminal the
-author runs themselves (a fresh terminal afterwards, to pick up the new PATH):
+**Node is installed, but not always on your PATH.** Node v24.19.0 and npm 11.17.0 live
+in `C:\Program Files\nodejs\`. Any terminal opened before they were installed — this
+session's shell included — won't have them on PATH and will report `command not found`.
+Don't conclude Node is missing from that alone. Call the binaries by full path instead:
 
-```bash
-winget install OpenJS.NodeJS.LTS
+```powershell
+& "$env:ProgramFiles\nodejs\npm.cmd" run build
 ```
 
-Astro needs Node 22 or newer. If Node is still missing, say so plainly and offer the
-choice: install it, or skip the preview and publish blind. Don't quietly skip the
-preview — it's the step the author asked for.
+`gh` 2.101.0 has the same shape: installed at `C:\Program Files\GitHub CLI\gh.exe`,
+frequently not on a stale PATH, callable by full path. It is not authenticated, so use
+the anonymous Actions API in phase 3 rather than `gh` commands.
+
+If `npm install` fails with `ENOENT ... open 'C:\Users\<name>\package.json'`, the
+command was run from a home directory rather than the repo. `cd` into the repo first.
+A successful install prints an `npm warn allow-scripts` block about `esbuild`'s
+postinstall being skipped — that is a warning, not a failure, and the build works
+regardless. Don't run `npm approve-scripts` to chase it.
+
+Astro needs Node 22 or newer. If Node ever really is missing, say so plainly and offer
+the choice: install it with `winget install OpenJS.NodeJS.LTS` in a terminal the author
+runs themselves, or skip the preview and publish blind. Don't quietly skip the preview
+— it's the step the author asked for.
 
 **Commits are authored by Marco.** The identity comes from the *global* git config
 (`Marco <48856822+the-solid-snack@users.noreply.github.com>`); there is no repo-local
