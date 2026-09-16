@@ -15,8 +15,8 @@ Create a file in `src/content/posts/`. The filename becomes the URL, so
 ---
 title: "In defence of the crisp sandwich"
 date: 2026-07-22
-summary: "One line that appears on the homepage and in the RSS feed."
-topics: [Food, Half-baked]
+summary: "One line that appears under the headline and on the homepage."
+topics: [Food, Half-baked, English]
 kicker: "Food · A hill I will die on"
 draft: false
 ---
@@ -32,11 +32,12 @@ Normal text. **Bold**, *italic*, `inline code`, [a link](https://example.com).
 
 | Field | Required | What it does |
 |---|---|---|
-| `title` | yes | Headline, page title, feed entry |
+| `title` | yes | Headline, page title, browser tab |
 | `date` | yes | `YYYY-MM-DD`. Controls ordering; newest post is the featured one |
-| `summary` | yes | The line under the headline, on the homepage, and in RSS |
-| `topics` | no | Any of `Food`, `Culture`, `Tech`, `Half-baked` — or invent one and it gets its own page |
+| `summary` | yes | The line under the headline, the blurb on the homepage and topic pages, and the page's meta description |
+| `topics` | optional in the schema, needed in practice | A subject — `Kitchen`, `Fiction`, `AI`, `Food`, `Culture`, `Half-baked`, or invent one and it gets its own page — **and** a language, `English` or `French`. The sidebar splits the same array into both lists, so a post missing its language tag disappears from the language filter |
 | `kicker` | no | Small line above the headline. Defaults to your topics |
+| `author` / `authorBio` | no | Guest posts only. Set both, or neither |
 | `draft` | no | `true` hides it from the published site but keeps it visible locally |
 
 Get a field wrong and the build tells you exactly which file and which field. That's
@@ -130,7 +131,7 @@ Set up once:
 1. Push this folder to a GitHub repository.
 2. In the repo, **Settings → Pages → Source**, choose **GitHub Actions**.
 3. Point your domain at GitHub Pages — [the DNS instructions are here](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
-4. Set `site:` in `astro.config.mjs` to your domain (already done: `https://andolfatto.co.uk`).
+4. Set `site:` in `astro.config.mjs` to your domain (already done: `https://dockofthepond.co.uk`).
 
 The `public/CNAME` file is there for completeness, but because this repo deploys via a
 GitHub Actions workflow rather than from a branch, GitHub ignores it — the domain in
@@ -139,8 +140,8 @@ GitHub Actions workflow rather than from a branch, GitHub ignores it — the dom
 After that, publishing is:
 
 ```bash
-git add .
-git commit -m "New post about crisps"
+git add src/content/posts/your-post.md
+git commit -m 'Publish "Your title"'
 git push
 ```
 
@@ -151,13 +152,14 @@ usually within a minute. The Actions tab shows progress and any failure.
 
 ## Renaming the blog
 
-1. `src/lib/site.ts` — title, description, your name, location, sidebar links.
+1. `src/lib/site.ts` — title, description, your name, location, footer small print.
 2. `src/components/Logo.astro` — the wordmark next to the mark.
 3. `src/pages/index.astro` — the big title on the front page and the catch phrase.
 4. `src/components/SiteFooter.astro` — the signature at the bottom.
 
-The rotating logo lives in `Logo.astro` and `public/favicon.svg`. Same two shapes in
-both, so change them together.
+The frog hops slightly on hover. It lives in `Logo.astro` as
+`public/images/frog-mark.png`; the browser-tab icon is the separate
+`public/favicon.png`. Change them together if you replace the mark.
 
 ---
 
@@ -173,11 +175,12 @@ the very top. Change `--terra` and the accents change everywhere.
 | `--green` | dark green | Headings on hover, emphasis, drop cap |
 | `--terra` | terracotta | Accents, arrows, rules, progress bar |
 
-Dark mode is the `[data-theme="dark"]` block underneath, and the toggle sits at the
-bottom of the sidebar.
+There is no dark mode — the site is light only, and there is no theme toggle.
 
-Fonts are loaded from Google Fonts in `src/layouts/Base.astro`: Instrument Serif for
-display, Newsreader for reading, Inter for small text, JetBrains Mono for code.
+Fonts are loaded from Google Fonts in `src/layouts/Base.astro`: Amatic SC for the blog
+name, Instrument Serif for display headings, Inter for post bodies and small text,
+JetBrains Mono for code. Newsreader is the reading serif used elsewhere on the site;
+post bodies moved to Inter when every post was set in the sans face.
 
 ---
 
@@ -188,10 +191,10 @@ src/
   content/posts/*.md      ← your posts. This is the folder you live in
   data/notes.json         ← the short notes on the homepage
   content.config.ts       ← the rules for post frontmatter
-  lib/site.ts             ← blog name, description, links
+  lib/site.ts             ← blog name, description, your name, footer small print
   lib/posts.ts            ← sorting, dates, reading time, topic counts
   styles/global.css       ← all styling for the whole site
-  components/             ← logo, sidebar, footer, theme toggle
+  components/             ← logo, sidebar, footer
   layouts/Base.astro      ← the page shell: head, fonts, scripts
   layouts/Post.astro      ← the article page
   pages/index.astro       ← the front page
@@ -199,7 +202,7 @@ src/
   pages/topics/[topic].astro ← one page per topic, generated
   pages/archive.astro     ← the full list
   pages/about.astro       ← edit this with your own words
-  pages/rss.xml.ts        ← the feed
+  pages/404.astro         ← the not-found page
 public/                   ← images, favicon, CNAME. Served as-is
 ```
 
