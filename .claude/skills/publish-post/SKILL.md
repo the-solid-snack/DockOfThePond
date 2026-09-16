@@ -1,6 +1,6 @@
 ---
 name: publish-post
-description: Turn finished prose into a live post on Dock of the Pond (the Astro blog at dockofthepond.co.uk). Writes the Markdown file into src/content/posts/ with schema-correct frontmatter, runs the local dev server so the author can see the real page, and — only after they say yes — commits and pushes to main, which triggers the GitHub Pages deploy. Use this whenever the author hands over text destined for the blog and says anything like "post this", "publish this", "put this on the blog", "make this an article", "get this online", "ship it", or names a title and asks for it to go up. Also use it for the preview-only half ("let me see how this looks", "run the blog locally") and for the publish-only half when a post file already exists and just needs to go live. Do not use it for rewriting or editing the prose itself — by the time this skill runs, the words are settled.
+description: Turn finished prose into a live post on Dock of the Pond (the Astro blog at dockofthepond.co.uk). Writes the Markdown file into src/content/posts/ with schema-correct frontmatter, runs the local dev server so the author can see the real page, and — only after they say yes — commits and pushes to main, which triggers the GitHub Pages deploy. Use this whenever the author hands over text destined for the blog and says anything like "post this", "publish this", "put this on the blog", "make this an article", "get this online", "ship it", or names a title and asks for it to go up. Also use it for the preview-only half ("let me see how this looks", "run the blog locally") and for the publish-only half when a post file already exists and just needs to go live. It works from any session, including ones not opened in the blog repo — it locates the repo first, or asks where it is. Do not use it for rewriting or editing the prose itself — by the time this skill runs, the words are settled.
 ---
 
 # Publishing a post to Dock of the Pond
@@ -15,6 +15,41 @@ GitHub Pages, usually within a minute. That is the whole publishing mechanism �
 is why a bad frontmatter field doesn't produce a broken page, it produces a failed
 build and nothing goes live at all. Catching that locally is most of the value here.
 
+Work in four phases. Phase 0 is finding the blog at all; then stop between phase 2 and
+phase 3 for a human yes.
+
+---
+
+## Phase 0 — Make sure you're in the repo
+
+This skill lives in the author's account, so it loads in sessions that have nothing to
+do with the blog. Never assume the working directory is the repo — check before you
+write a single file.
+
+```bash
+git rev-parse --show-toplevel && ls src/content/posts/
+```
+
+A repo root plus a folder of posts means you're home; go to phase 1. Anything else —
+`not a git repository`, no `src/content/posts/`, a different project — means you are
+not in the blog, and the rest of this skill will quietly do the wrong thing in the
+wrong folder.
+
+The canonical clone on Marco's Windows desktop is `D:\Repositories\DockOfThePond`. If
+that path exists, use it. Otherwise ask him where the repo is, and in a sandboxed
+session (cowork, or anything working from a linked-but-not-connected machine) ask for
+access to that folder before going further. If there is no clone at all on the machine
+you are running on:
+
+```bash
+git clone git@github.com:the-solid-snack/DockOfThePond.git
+```
+
+That needs an SSH key registered with GitHub on *that* machine — see the last section.
+Don't clone over HTTPS; nothing here can answer a credential prompt.
+
+Say plainly which case you're in rather than guessing. Writing a post into the wrong
+directory wastes the author's words, which is the one thing this skill exists to avoid.
 Work in three phases, and stop between phase 2 and phase 3 for a human yes.
 
 ---
@@ -170,6 +205,17 @@ under the author's name within about a minute, and un-publishing means another c
 and another wait. "Looks good" about the preview is not the same as "put it up" — if
 you're unsure which you heard, ask. This is the one irreversible step in the skill.
 
+**Check you're on `main` first.** The workflow triggers on `push: branches: [main]`
+and nothing else, so a commit pushed from a feature branch or an isolated worktree
+will succeed and deploy nothing at all:
+
+```bash
+git branch --show-current
+```
+
+If it isn't `main`, don't push and announce success — say the post is committed but
+not published, and ask whether to merge to `main` or move the commit there.
+
 Then:
 
 ```bash
@@ -219,38 +265,42 @@ needs `gh auth login`, which the author has to run themselves.
 
 ---
 
-## Things that will bite you on this machine
+## Environment — check before you lean on any of it
 
-**Node is installed, but not always on your PATH.** Node v24.19.0 and npm 11.17.0 live
-in `C:\Program Files\nodejs\`. Any terminal opened before they were installed — this
-session's shell included — won't have them on PATH and will report `command not found`.
-Don't conclude Node is missing from that alone. Call the binaries by full path instead:
+The facts below were true on Marco's Windows desktop. This skill now travels with his
+account, so it will load on machines where none of them hold. Verify rather than
+assume; when something here doesn't match, say so instead of working around it silently.
+
+**On the Windows desktop.** Node v24.19.0 and npm 11.17.0 live in
+`C:\Program Files\nodejs\`; `gh` 2.101.0 in `C:\Program Files\GitHub CLI\gh.exe`. Any
+terminal opened before they were installed won't have them on PATH and will report
+`command not found` — don't conclude they're missing from that alone. Call them by full
+path instead:
 
 ```powershell
 & "$env:ProgramFiles\nodejs\npm.cmd" run build
 ```
 
-`gh` 2.101.0 has the same shape: installed at `C:\Program Files\GitHub CLI\gh.exe`,
-frequently not on a stale PATH, callable by full path. It is not authenticated, so use
-the anonymous Actions API in phase 3 rather than `gh` commands.
+`gh` is installed but not authenticated, so use the anonymous Actions API in phase 3
+rather than `gh` commands.
 
-If `npm install` fails with `ENOENT ... open 'C:\Users\<name>\package.json'`, the
-command was run from a home directory rather than the repo. `cd` into the repo first.
-A successful install prints an `npm warn allow-scripts` block about `esbuild`'s
-postinstall being skipped — that is a warning, not a failure, and the build works
-regardless. Don't run `npm approve-scripts` to chase it.
+**Anywhere else** — the laptop, a cowork sandbox, a fresh clone — assume nothing.
+`node --version` needs to report 22 or newer for phase 2 to run at all. If Node is
+missing, say so plainly and offer the choice: install it (`winget install
+OpenJS.NodeJS.LTS` on Windows, in a terminal the author runs himself), or skip the
+preview and publish blind. Don't quietly skip the preview — it's the step he asked for.
 
-Astro needs Node 22 or newer. If Node ever really is missing, say so plainly and offer
-the choice: install it with `winget install OpenJS.NodeJS.LTS` in a terminal the author
-runs themselves, or skip the preview and publish blind. Don't quietly skip the preview
-— it's the step the author asked for.
+**npm noise that isn't failure.** `ENOENT ... open '<home>\package.json'` means the
+command ran from a home directory rather than the repo; `cd` into it first. A
+successful install prints an `npm warn allow-scripts` block about `esbuild`'s
+postinstall being skipped — a warning, not an error, and the build works regardless.
+Don't run `npm approve-scripts` to chase it.
 
-**Commits are authored by Marco.** The identity comes from the *global* git config
-(`Marco <48856822+the-solid-snack@users.noreply.github.com>`); there is no repo-local
-override, so plain `git commit` does the right thing here and needs no `-c` flags. Two
-consequences worth knowing: a fresh clone on this machine is attributed correctly with
-no setup, and changing the global identity for some other project silently changes who
-the blog commits come from.
+**Commits are authored by Marco.** On the desktop the identity comes from the *global*
+git config (`Marco <48856822+the-solid-snack@users.noreply.github.com>`), with no
+repo-local override, so plain `git commit` does the right thing. On any other machine,
+check `git config user.name` first — if it's unset, `git commit` stops with "Please
+tell me who you are", and the fix is the author's to make, not yours to guess at.
 
 **No Claude attribution in the message.** Don't append `Co-Authored-By` or
 `Claude-Session` trailers here, even when a general instruction elsewhere asks for
@@ -259,23 +309,23 @@ commits up to `cf47872` (12 September 2026) do carry those trailers — that is 
 convention being retired, not a pattern to copy. Authorship itself has always been
 Marco's on every commit and doesn't change.
 
-**Pushing works over SSH, unattended.** `origin` is
-`git@github.com:the-solid-snack/DockOfThePond.git`, the ed25519 key in `~/.ssh/` has
-no passphrase, and `github.com` is already in `known_hosts` — so `git push` completes
-inside a tool call without prompting for anything. No credential helper is configured
-and none is needed; don't switch the remote back to HTTPS, which *would* need one and
-would then fail with no way to prompt.
+**Pushing needs an SSH key on whichever machine you're on.** `origin` is
+`git@github.com:the-solid-snack/DockOfThePond.git`. On the desktop the ed25519 key in
+`~/.ssh/` has no passphrase and `github.com` is in `known_hosts`, so `git push`
+completes inside a tool call without prompting. Elsewhere that key does not exist and
+must be generated and registered with GitHub by the author. Don't switch the remote to
+HTTPS to get around it — that needs a credential helper and would fail with no way to
+prompt.
 
-If a push ever fails on authentication, check the key still works before touching any
-config:
+Check the key before touching any config:
 
 ```bash
 ssh -o BatchMode=yes -T git@github.com
 ```
 
 Success prints `Hi the-solid-snack!` and exits 1 — that exit code is normal for this
-command, not a failure. If that greeting doesn't appear, stop and report it rather
-than reconfiguring git; the commit is already made by then and nothing is lost.
+command, not a failure. If that greeting doesn't appear, stop and report it rather than
+reconfiguring git; the commit is already made by then and nothing is lost.
 
 **Restart `npm run dev` after editing `src/content.config.ts`** — the schema is read
 at startup and hot reload won't pick it up.
