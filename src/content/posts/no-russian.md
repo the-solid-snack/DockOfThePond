@@ -32,4 +32,4 @@ Fucking assault goats, man.
 
 The little sack of shit rammed me head first and owes its life to sheer luck that my knife skidded on a horn. Dazed, it bolts down the track as I get up on my feet. I feel the kid's grin burning a hole in my back. Fair enough, from where he's standing the whole scene was probably close to Benny Hill material. To my credit, CQB training didn't cover encounters with charging farm animals.
 
-Recovering my senses, I sharpen back up. Thankfully the vest dampened the impact of an animal launched at ballistic speed. It's a long shot, but the presence of that daft animal hints at a herder somewhere who might have heard us and, assuming, would be heading straight to the source of the racket. "We're moving outta here," I signal.
+Recovering my senses, I sharpen back up. Thankfully the vest dampened the impact of an animal launched at ballistic speed. It's a long shot, but the presence of that daft beast hints at a herder somewhere who might have heard us and, assuming, would be heading straight to the source of the racket. "We're moving outta here," I signal.
