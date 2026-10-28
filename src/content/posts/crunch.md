@@ -1,7 +1,7 @@
 ---
 title: "Crunch"
 date: 2026-10-28
-summary: "Une chambre au Maroc, un paquet de biscuits gardé pour les coups durs, et un chat qui a très bien compris lequel de nous deux a choisi la bonne carrière."
+summary: "Une chambre au Maroc, un paquet de biscuits gardé pour les coups durs, et un chat qui a très bien compris qui est le boss."
 topics: [Travel, French]
 kicker: "Travel · Maroc"
 ---
