@@ -14,5 +14,5 @@ export const SITE = {
   footnote: 'Written by a human, usually after dinner. No trackers, no newsletter, no plan.',
 
   // Shown in the page footer.
-  colophon: 'Built by hand · Set in Instrument Serif & Newsreader',
+  colophon: 'Built by hand · Set in Special Elite',
 };
