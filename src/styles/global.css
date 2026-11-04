@@ -197,11 +197,12 @@ main{margin-left:var(--bar);padding:0 var(--pad)}
 .entry-meta time{font-variant-numeric:tabular-nums}
 .entry-meta .sep{width:3px;height:3px;border-radius:50%;background:var(--rule)}
 .tag{
-  color:var(--green);border:1px solid var(--rule);padding:.16rem .55rem;
+  display:inline-flex;align-items:center;line-height:1;
+  color:var(--green);border:1px solid var(--rule);padding:5px 10px 4px;
   border-radius:99px;font-size:.7rem;letter-spacing:.02em;
   transition:border-color .25s,color .25s;
 }
-.entry:hover .tag{border-color:var(--green-2)}
+@media (hover:hover){.entry:hover .tag{border-color:var(--green-2)}}
 .entry h3{
   font-family:var(--display);font-size:clamp(1.85rem,3.4vw,2.9rem);
   letter-spacing:-.02em;line-height:1.06;margin-bottom:.85rem;max-width:34ch;
@@ -333,8 +334,8 @@ article{max-width:44rem;margin:0 auto;padding:5.5rem 0 4rem}
    ============================================================ */
 .art-foot{max-width:44rem;margin:0 auto;padding-bottom:5rem}
 .tags{display:flex;gap:.5rem;flex-wrap:wrap;padding:2.5rem 0;border-top:1px solid var(--rule)}
-.tags .tag{font-family:var(--sans);font-size:.74rem;padding:.25rem .7rem}
-.tags .tag:hover{border-color:var(--green-2);color:var(--green-2)}
+.tags .tag{font-family:var(--sans);font-size:.74rem;padding:6px 12px 5px}
+@media (hover:hover){.tags .tag:hover{border-color:var(--green-2);color:var(--green-2)}}
 .author-card{
   display:flex;gap:1.2rem;align-items:flex-start;padding:2rem;
   background:var(--paper-2);border-radius:3px;transition:background .5s var(--ease);
